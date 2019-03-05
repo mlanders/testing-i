@@ -65,14 +65,14 @@ describe('Repair Item', () => {
 	});
 });
 describe('Success', () => {
-	describe('Increment armor enhancement', () => {
+	describe('Increment armor enhancement and displayName is updated', () => {
 		expect(success(armor)).toMatchObject({
 			...armor,
 			enhancement: armor.enhancement + 1,
 			displayName: `${enhanceLevels[armor.enhancement + 1]} ${armor.name}`,
 		});
 	});
-	describe('Increment weapon enhancement', () => {
+	describe('Increment weapon enhancement and displayName is updated', () => {
 		expect(success(weapon)).toMatchObject({
 			...weapon,
 			enhancement: weapon.enhancement + 1,
@@ -96,7 +96,7 @@ describe('Fail', () => {
 			expect(actual.durability).toBe(80);
 		});
 	});
-	describe('the durability decreased by 5 if the item’s enhancement is between 0 and 14.', () => {
+	describe('durability decreases by 10 if enhancement is greater than 14', () => {
 		it('durability decreases by 10 if enhancement is greater than 14', () => {
 			// Assert
 			expect(
@@ -107,7 +107,7 @@ describe('Fail', () => {
 			).toBe(75);
 		});
 	});
-	describe('the durability decreased by 5 if the item’s enhancement is between 0 and 14.', () => {
+	describe('should not affect item if enhancement is less than 15 and the durability is below 25', () => {
 		it('should not affect item if enhancement is less than 15 and the durability is below 25', () => {
 			const item = {
 				enhancement: 14,
@@ -117,7 +117,6 @@ describe('Fail', () => {
 			expect(fail(item)).toEqual(item);
 		});
 	});
-
 	describe('enhancement greater than 16 > enhancement decreases by 1', () => {
 		it('should decrease enhancement if item is enhanced greater than 16', () => {
 			const item = { enhancement: 18 };
@@ -126,5 +125,17 @@ describe('Fail', () => {
 
 			expect(actual.enhancement).toBe(17);
 		});
+	});
+	describe('when enhancement level decreases by 1 the name is updated', () => {
+		it('when enhancement level decreases by 1 the name is updated', () => {
+			const item = { enhancement: 18, name: 'Name', displayName: '[TRI] Name' };
+
+			const actual = fail(item);
+
+			expect(actual.displayName).toBe('[DUO] Name');
+		});
+	});
+	describe('enhancement is 15 or higher, the item cannot be enhanced if the durability is below 10.', () => {
+		it('enhancement is 15 or higher, the item cannot be enhanced if the durability is below 10.', () => {});
 	});
 });

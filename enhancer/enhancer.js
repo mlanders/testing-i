@@ -50,4 +50,17 @@ function success(item) {
 	}
 }
 
-function fail(item) {}
+function fail(item) {
+	if (item.enhancement < 15 && item.durability < 25) {
+		return { ...item };
+	}
+
+	const durability = item.enhancement < 15 ? item.durability - 5 : item.durability - 10;
+
+	const enhancement = item.enhancement > 16 ? item.enhancement - 1 : item.enhancement;
+
+	const displayName =
+		item.enhancement > 16 ? `${enhanceLevels[enhancement]} ${item.name}` : item.displayName;
+
+	return { ...item, durability, enhancement, displayName };
+}
